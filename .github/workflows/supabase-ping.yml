@@ -1,8 +1,8 @@
 name: Supabase Keep-Alive
 on:
   schedule:
-    - cron: '0 0 */5 * *'  # Setiap 5 hari sekali (jam 00:00 UTC)
-  workflow_dispatch:        # Memungkinkan trigger manual
+    - cron: '0 05 * * *'  # Setiap hari jam 12:00 UTC (19:00 WIB)
+  workflow_dispatch:
 
 jobs:
   ping:
@@ -10,5 +10,11 @@ jobs:
     steps:
       - name: Ping Supabase
         run: |
+          # Ping ke beberapa endpoint Supabase
           curl -X GET "https://${{ secrets.SUPABASE_PROJECT_ID }}.supabase.co/rest/v1/" \
           -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}"
+          
+          curl -X GET "https://${{ secrets.SUPABASE_PROJECT_ID }}.supabase.co/auth/v1/settings" \
+          -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}"
+          
+          echo "Supabase pinged at $(date)"
