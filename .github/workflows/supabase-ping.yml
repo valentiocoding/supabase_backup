@@ -9,19 +9,18 @@ jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Query a Table on Supabase and Show Data
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Query Top 5 Rows from Supabase Table
         run: |
-          # Ganti 'your_table' dengan nama tabel nyata
-          response=$(curl -s -X GET "https://${{ secrets.SUPABASE_PROJECT_ID }}.supabase.co/rest/v1/maindata?limit=1" \
+          # Ganti 'your_table' dengan nama tabel sebenarnya
+          response=$(curl -s -X GET "https://${{ secrets.SUPABASE_PROJECT_ID }}.supabase.co/rest/v1/maindata?limit=5" \
             -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
             -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
             -H "Content-Type: application/json")
 
-          echo "Response from Supabase:"
+          echo "Top 5 rows from Supabase table:"
           echo "$response" | jq .
           
           echo "Supabase keep-alive pinged at $(date)"
-
-        # Install jq for JSON formatting
-      - name: Install jq
-        run: sudo apt-get update && sudo apt-get install -y jq
